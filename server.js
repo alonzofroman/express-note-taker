@@ -2,6 +2,10 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const util = require('util')
+const router = express.Router();
+
+
 const notesList = require('./db/db.json');
 
 const app = express();
@@ -23,21 +27,25 @@ app.get('/notes', (req, res) => {
 
 // Load Notes
 app.get('/api/notes', (res, req) => {
-    fs.readFile(path.join(__dirname, './db/db.json'), (err, data) => {
-        if (err) {
-            throw err
-        }
+    util.promisify(fs.readFile(path.join(__dirname, './db/db.json'))).then((data) => {
         let notes = JSON.parse(data);
         req.json(notes);
-    });
+    })
 });
 
 // New Notes
+app.post('/api/notes', (res, req) => {
+    util.promisify(fs.readFile(path.join(__dirname, './db/db.json'))).then((data) => {
+        let notes = JSON.parse(data);
+        let newNote = req.json(body);
+    })
+
+})
 
 // Delete Notes
 
 
 // Port listener
 app.listen(PORT, function() {
-    console.log(`Listening to http://localhost:${PORT}`)
+    console.log(`Listening to Port: ${PORT}`)
 })
