@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const router = express.Router();
+const { v4: uuidv4 } = require('uuid');
 
 // const notesList = require('../db/db.json');
 
@@ -20,13 +21,18 @@ router.get('/notes', (req, res) => {
 
 // New Notes
 router.post('/notes', (req, res) => {
-    console.info(`${req.method} request received to add note`)
+    console.info(`${req.method} request received to add note`);
     fs.readFile(path.join(__dirname, '../db/db.json'), (err, data) => {
         if (err) {
             throw err
         }
         let notes = JSON.parse(data);
-        let newNote = req.body;
+        const { title, text} = req.body;
+            const newNote = {
+                title,
+                text,
+                id: uuidv4(),
+            }
         notes.push(newNote);
         fs.writeFile('./db/db.json', JSON.stringify(notes), null, (err) => {
             if (err) {
@@ -38,6 +44,7 @@ router.post('/notes', (req, res) => {
     })
 });
 
-// Delete Notes
+// Delete Note
+
 
 module.exports = router
