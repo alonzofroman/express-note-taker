@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const util = require('util')
 const router = express.Router();
-
+const notesRouter = require('./routes/notes')
 
 const notesList = require('./db/db.json');
 
@@ -25,24 +25,8 @@ app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/notes.html'))
 });
 
-// Load Notes
-app.get('/api/notes', (res, req) => {
-    util.promisify(fs.readFile(path.join(__dirname, './db/db.json'))).then((data) => {
-        let notes = JSON.parse(data);
-        req.json(notes);
-    })
-});
-
-// New Notes
-app.post('/api/notes', (res, req) => {
-    util.promisify(fs.readFile(path.join(__dirname, './db/db.json'))).then((data) => {
-        let notes = JSON.parse(data);
-        let newNote = req.json(body);
-    })
-
-})
-
-// Delete Notes
+// API Routes
+app.use('/api', notesRouter);
 
 
 // Port listener
