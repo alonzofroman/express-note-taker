@@ -38,13 +38,34 @@ router.post('/notes', (req, res) => {
             if (err) {
                 throw err
             }
-            console.log('Note added')
+            console.log('Note added');
             res.json(newNote);
         })
     })
 });
 
 // Delete Note
-
+router.delete('/notes/:id', (req, res) => {
+    console.info(`${req.method} request received to delete a note`);
+    
+    fs.readFile(path.join(__dirname, '../db/db.json'), (err, data) => {
+        if (err) {
+            throw err
+        }
+    let notes = JSON.parse(data);
+    for(i=0; i<notes.length; i++) {
+        if (notes[i].id === req.params.id) {
+             notes.splice(i, 1);
+        }
+    }
+    fs.writeFile('./db/db.json', JSON.stringify(notes), null, (err) => {
+        if (err) {
+            throw err
+        }
+        console.log('Note Deleted');
+        res.json(notes);
+    })
+    })
+})
 
 module.exports = router
